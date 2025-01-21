@@ -52,6 +52,7 @@
     const [shuffledQuestions, setShuffledQuestions] = useState([]);
     const [userDetails, setUserDetails] = useState({ name: "", email: "", phoneNumber: "" });
     const [quizStarted, setQuizStarted] = useState(false);
+    const [showResult, setShowResult] = useState(false);  // New state for showing results screen
 
     // Shuffle questions on initial render
     useEffect(() => {
@@ -90,88 +91,172 @@
         alert("Please fill in all fields.");
       }
     };
+    // const handleSubmitQuiz = () => {
+    //   alert(`Thank you for submitting! Your score is ${score} / ${shuffledQuestions.length}`);
+    //   setQuizStarted(false);  // Reset to allow restart
+    //   setScore(0);  // Reset score for a new quiz session
+    //   setCurrentQuestionIndex(0);  // Reset question index
+    // };
     const handleSubmitQuiz = () => {
-      alert(`Thank you for submitting! Your score is ${score} / ${shuffledQuestions.length}`);
-      setQuizStarted(false);  // Reset to allow restart
+      setShowResult(true);  // Show the result screen
+    };
+  
+    const restartQuiz = () => {
+      setShowResult(false);  // Hide the result screen
       setScore(0);  // Reset score for a new quiz session
       setCurrentQuestionIndex(0);  // Reset question index
     };
     return (
-      <div className="quiz-app">
-        {!quizStarted ? (
-          <div className="user-details-section">
-            <h1>Welcome to the Basic Computer Assessment</h1>
-            <form onSubmit={handleSubmitDetails}>
-              <div className="form-group">
-                <label>Name:</label>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Enter ur name"
-                  value={userDetails.name}
-                  onChange={handleInputChange}
-                  required
-                />
+  //     <div className="quiz-app">
+  //       {!quizStarted ? (
+  //         <div className="user-details-section">
+  //           <h1>Welcome to the Basic Computer Assessment</h1>
+  //           <form onSubmit={handleSubmitDetails}>
+  //             <div className="form-group">
+  //               <label>Name:</label>
+  //               <input
+  //                 type="text"
+  //                 name="name"
+  //                 placeholder="Enter ur name"
+  //                 value={userDetails.name}
+  //                 onChange={handleInputChange}
+  //                 required
+  //               />
+  //             </div>
+  //             <div className="form-group">
+  //               <label>Email:</label>
+  //               <input
+  //                 type="email"
+  //                 name="email"
+  //                 placeholder="Enter ur email"
+  //                 value={userDetails.email}
+  //                 onChange={handleInputChange}
+  //                 required
+  //               />
+  //             </div>
+  //             <div className="form-group">
+  //               <label>Phone Number:</label>
+  //               <input
+  //                 type="text"
+  //                 name="phoneNumber"
+  //                 placeholder="enter ur number "
+  //                 value={userDetails.phoneNumber}
+  //                 onChange={handleInputChange}
+  //                 required
+  //               />
+  //             </div>
+  //             <button type="submit">Start Quiz</button>
+  //           </form>
+  //         </div>
+  //       ) : (
+  //         <div className="question-section">
+  //           <h1>Basic Computer Assessment</h1>
+  //           {shuffledQuestions.length > 0 && currentQuestionIndex < shuffledQuestions.length ? (
+  //             <div>
+  //               <div className="question-number">
+  //                 Question {currentQuestionIndex + 1} / {shuffledQuestions.length}
+  //               </div>
+  //               <h2 className="question">{shuffledQuestions[currentQuestionIndex].question}</h2>
+  //               <div className="options">
+  //                 {shuffledQuestions[currentQuestionIndex].options.map((option, index) => (
+  //                   <button
+  //                     key={index}
+  //                     className={`option-button ${answered ? "disabled" : ""}`}
+  //                     onClick={() => handleAnswerSelection(option)}
+  //                     disabled={answered}
+  //                   >
+  //                     {option}
+  //                   </button>
+  //                 ))}
+  //               </div>
+  //             </div>
+  //           ) : (
+  //             <div className="score-section">
+  //               <h2>Your Score: {score} / {shuffledQuestions.length}</h2>
+  //               <p>{score >= shuffledQuestions.length * 0.7 ? "Great job!" : "Keep practicing to improve!"}</p>
+  //               <p>Thank you for participating!</p>
+  //               <button onClick={handleSubmitQuiz}>Submit Quiz</button>
+  //             </div>
+  //           )}
+  //         </div>
+  //       )}
+  //     </div>
+  //   );
+  // }
+<div className="quiz-app">
+      {!quizStarted ? (
+        <div className="user-details-section">
+          <h1>Welcome to the Basic Computer Assessment</h1>
+          <form onSubmit={handleSubmitDetails}>
+            <div className="form-group">
+              <label>Name:</label>
+              <input
+                type="text"
+                name="name"
+                placeholder="Enter your name"
+                value={userDetails.name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Email:</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={userDetails.email}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Phone Number:</label>
+              <input
+                type="text"
+                name="phoneNumber"
+                placeholder="Enter your number"
+                value={userDetails.phoneNumber}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <button type="submit">Start Quiz</button>
+          </form>
+        </div>
+      ) : showResult ? (
+        <div className="score-section">
+          <h2>Your Score: {score} / {shuffledQuestions.length}</h2>
+          <p>{score >= shuffledQuestions.length * 0.7 ? "Great job!" : "Keep practicing to improve!"}</p>
+          <p>Thank you for participating!</p>
+          <button onClick={restartQuiz}>Restart Quiz</button>
+        </div>
+      ) : (
+        <div className="question-section">
+          <h1>Basic Computer Assessment</h1>
+          {shuffledQuestions.length > 0 && currentQuestionIndex < shuffledQuestions.length ? (
+            <div>
+              <div className="question-number">
+                Question {currentQuestionIndex + 1} / {shuffledQuestions.length}
               </div>
-              <div className="form-group">
-                <label>Email:</label>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter ur email"
-                  value={userDetails.email}
-                  onChange={handleInputChange}
-                  required
-                />
+              <h2 className="question">{shuffledQuestions[currentQuestionIndex].question}</h2>
+              <div className="options">
+                {shuffledQuestions[currentQuestionIndex].options.map((option, index) => (
+                  <button
+                    key={index}
+                    className={`option-button ${answered ? "disabled" : ""}`}
+                    onClick={() => handleAnswerSelection(option)}
+                    disabled={answered}
+                  >
+                    {option}
+                  </button>
+                ))}
               </div>
-              <div className="form-group">
-                <label>Phone Number:</label>
-                <input
-                  type="text"
-                  name="phoneNumber"
-                  placeholder="enter ur number "
-                  value={userDetails.phoneNumber}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <button type="submit">Start Quiz</button>
-            </form>
-          </div>
-        ) : (
-          <div className="question-section">
-            <h1>Basic Computer Assessment</h1>
-            {shuffledQuestions.length > 0 && currentQuestionIndex < shuffledQuestions.length ? (
-              <div>
-                <div className="question-number">
-                  Question {currentQuestionIndex + 1} / {shuffledQuestions.length}
-                </div>
-                <h2 className="question">{shuffledQuestions[currentQuestionIndex].question}</h2>
-                <div className="options">
-                  {shuffledQuestions[currentQuestionIndex].options.map((option, index) => (
-                    <button
-                      key={index}
-                      className={`option-button ${answered ? "disabled" : ""}`}
-                      onClick={() => handleAnswerSelection(option)}
-                      disabled={answered}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="score-section">
-                <h2>Your Score: {score} / {shuffledQuestions.length}</h2>
-                <p>{score >= shuffledQuestions.length * 0.7 ? "Great job!" : "Keep practicing to improve!"}</p>
-                <p>Thank you for participating!</p>
-                <button onClick={handleSubmitQuiz}>Submit Quiz</button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-    );
-  }
-
+            </div>
+          ) : null}
+        </div>
+      )}
+    </div>
+  );
+}
   export default QuizApp;
